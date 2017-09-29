@@ -4,6 +4,8 @@ $('#clearLocal').click(function(){
 })
 
 var backEndTimeStamp = prompt('请输入您的年龄,注意格式','1993-11-20');    //后台时间戳数据
+var flag = false;
+var keepLength;
 console.log(backEndTimeStamp)
 var theTime = {
     //获取时间戳
@@ -41,19 +43,49 @@ var theTime = {
     //将时间绑定到DOM
     outputTime : function(day,hour,min,second){
         day = day+'';
-        hour = hour+'';
-        min = min+'';
-        second = second+'';
+        hour = hour < 10 ? '0' + hour + '' : hour +'';
+        min = min < 10 ? '0' + min + '' : min + '';
+        second = second < 10 ? '0'+second + '' : second +'';
 
-        var days = day.split(''),
-        hours = hour.split(''),
-        mins = min.split(''),
-        seconds = second.split('');
- 
         var $theDay = $('.theDay');
         var $theHour = $('.theHour');
         var $theMin = $('.theMin');
         var $theSecond = $('.theSecond');
+        
+        var days = day.split('');
+        //匹配页面
+        
+        if(keepLength !== days.length){
+            flag = false;
+        }
+
+        if(days.length > 3){
+            if(!flag){
+                keepLength = days.length
+                for(var i=0;i<days.length-3;i++){
+                    $('.wrap').prepend('<span class="theDay"></span>');
+                }
+                flag = true;
+            }
+        }else if(days.length < 3){
+            if(!flag){
+                keepLength = days.length
+                for(var i=0;i<3-day.length;i++){
+                    days.unshift('0');
+                }
+                flag = true;
+            }
+            
+            
+        }
+        
+       
+
+        var hours = hour.split(''),
+        mins = min.split(''),
+        seconds = second.split('');
+ 
+        
 
         // 渲染天数
         $theDay.each(function (index,el) {
