@@ -1,13 +1,15 @@
-$('#clearLocal').click(function(){
-    localStorage.clear();
-    window.location.reload();
-})
 
-var backEndTimeStamp = prompt('请输入您的年龄,注意格式','1993-11-20');    //后台时间戳数据
-var flag = false;
-var keepLength;
-console.log(backEndTimeStamp)
 var theTime = {
+    data : {
+        flag : false,
+        keepLength : ''
+    },
+    onLoad : function(){
+        $('#clearLocal').click(function(){
+            localStorage.clear();
+            window.location.reload();
+        })
+    },
     //获取时间戳
     getTimes : function(time){
         var previous;
@@ -21,11 +23,12 @@ var theTime = {
         // console.log(now.getTime()+'现在');
         return parseInt(now.getTime()) - parseInt(localStorage.getItem('previous'));
     },
-    //通过获取的时间戳来输出时间戳
-    putTime : function(){
+    //通过获取的时间戳,调用时间方法
+    putTime : function(inpuTtime){
+        this.onLoad();
         var _this = this;
         setInterval(function(){ 
-            var getTime = _this.getTimes(backEndTimeStamp);
+            var getTime = _this.getTimes(inpuTtime);
             //调用时间方法
             _this.theTimeGet(getTime);
         },1000);
@@ -40,8 +43,9 @@ var theTime = {
         console.log(day,hour,min,second);
         this.outputTime(day,hour,min,second);
     },
-    //将时间绑定到DOM
+    //将时间绑定到DOM,显示到页面
     outputTime : function(day,hour,min,second){
+        var _this = this;
         day = day+'';
         hour = hour < 10 ? '0' + hour + '' : hour +'';
         min = min < 10 ? '0' + min + '' : min + '';
@@ -54,38 +58,32 @@ var theTime = {
         
         var days = day.split('');
         //匹配页面
-        
-        if(keepLength !== days.length){
-            flag = false;
+        if(_this.data.keepLength !== days.length){
+            _this.data.flag = false;
         }
 
-        if(days.length > 3){
-            if(!flag){
-                keepLength = days.length
-                for(var i=0;i<days.length-3;i++){
+        if(days.length > $theDay){
+            if(!_this.data.flag){
+                _this.data.keepLength = days.length
+                for(var i=0;i<days.length-$theDay;i++){
                     $('.wrap').prepend('<span class="theDay"></span>');
                 }
-                flag = true;
+                _this.data.flag = true;
             }
-        }else if(days.length < 3){
-            if(!flag){
-                keepLength = days.length
-                for(var i=0;i<3-day.length;i++){
+        }else if(days.length < $theDay){
+            if(!_this.data.flag){
+                _this.data.keepLength = days.length
+                for(var i=0;i<$theDay-day.length;i++){
                     days.unshift('0');
                 }
-                flag = true;
+                _this.data.flag = true;
             }
-            
-            
+          
         }
         
-       
-
         var hours = hour.split(''),
         mins = min.split(''),
         seconds = second.split('');
- 
-        
 
         // 渲染天数
         $theDay.each(function (index,el) {
@@ -104,4 +102,4 @@ var theTime = {
 
 }
 // console.log(theTime.getTimes("1993-11-20"));
-theTime.putTime();
+theTime.putTime(prompt('请输入','1993-11-20'));
