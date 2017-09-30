@@ -1,12 +1,17 @@
 
 var theTime = {
+    //数据
     data : {
-        flag : false,
-        keepLength : ''
+        flag : false,   //天数的存储标记
+        keepLength : ''     //天数字符串长度
     },
+    //加载事件
     onLoad : function(){
+        //此处可移入click事件中,再此为了刷新效果
+        localStorage.clear();
+
         $('#clearLocal').click(function(){
-            localStorage.clear();
+            
             window.location.reload();
         })
     },
@@ -62,23 +67,23 @@ var theTime = {
             _this.data.flag = false;
         }
 
-        if(days.length > $theDay){
+        if(days.length > $theDay.length){
             if(!_this.data.flag){
                 _this.data.keepLength = days.length
-                for(var i=0;i<days.length-$theDay;i++){
+                for(var i=0;i<days.length-$theDay.length;i++){
                     $('.wrap').prepend('<span class="theDay"></span>');
                 }
                 _this.data.flag = true;
             }
-        }else if(days.length < $theDay){
+        }
+        else if(days.length < $theDay.length){
             if(!_this.data.flag){
                 _this.data.keepLength = days.length
-                for(var i=0;i<$theDay-day.length;i++){
-                    days.unshift('0');
+                for(var i=0;i<$theDay.length-day.length;i++){
+                    $('.wrap .theDay').last().remove();
                 }
                 _this.data.flag = true;
             }
-          
         }
         
         var hours = hour.split(''),
